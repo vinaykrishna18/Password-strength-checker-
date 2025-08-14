@@ -7,191 +7,247 @@
 <style>
     body {
         font-family: Arial, sans-serif;
-        background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);
+        background: #121212;
         color: #fff;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 100vh;
         margin: 0;
+        padding: 20px;
     }
-
-    .container {
+    h1, h2, h3 {
         text-align: center;
-        background: rgba(30, 30, 30, 0.9);
-        padding: 30px;
-        border-radius: 15px;
-        width: 350px;
-        box-shadow: 0px 0px 20px rgba(255, 255, 255, 0.2);
+        color: cyan;
+        text-shadow: 0 0 5px cyan;
+    }
+    /* Common section styles */
+    .info-table, .tips-table, .checker-table {
+        background: #1e1e1e;
+        border-radius: 12px;
+        padding: 20px;
+        margin: 20px auto;
+        width: 80%;
+        box-shadow: 0 0 15px rgba(0, 255, 255, 0.3);
+        opacity: 0;
+        transform: translateY(30px);
+        animation: fadeInUp 1s forwards;
+    }
+    /* Delay animations for each section */
+    .info-table { animation-delay: 0.2s; }
+    .tips-table { animation-delay: 0.5s; }
+    .checker-table { animation-delay: 0.8s; }
+
+    @keyframes fadeInUp {
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
     }
 
-    h1 {
-        margin-bottom: 15px;
-        font-size: 1.6rem;
-        background: linear-gradient(to right, cyan, lightgreen);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
+    ul {
+        list-style: none;
+        padding-left: 0;
     }
-
-    .input-group {
+    ul li {
+        margin-bottom: 8px;
+        font-size: 1rem;
+    }
+    /* arrow bullets for tips */
+    .tips-table li::before {
+        content: "→";
+        color: cyan;
+        margin-right: 8px;
+        font-weight: bold;
+    }
+    /* checker container */
+    .checker-container {
+        text-align: center;
+    }
+    .password-box {
         position: relative;
-        display: flex;
-        align-items: center;
+        display: inline-block;
+        width: 80%;
     }
-
-    input {
+    .password-box input {
         width: 100%;
-        padding: 10px 40px 10px 10px;
+        padding: 10px 35px 10px 10px;
         font-size: 1rem;
         border-radius: 8px;
         border: none;
         outline: none;
+        box-sizing: border-box;
     }
-
     .toggle-password {
         position: absolute;
         right: 10px;
+        top: 50%;
+        transform: translateY(-50%);
         cursor: pointer;
-        color: #aaa;
+        color: #888;
     }
-
+    /* strength bar */
     #strength-bar {
-        width: 100%;
-        height: 10px;
+        width: 80%;
+        height: 8px;
         background: #444;
         border-radius: 8px;
-        margin: 10px 0;
+        margin: 8px auto;
         overflow: hidden;
     }
-
     #strength-bar div {
         height: 100%;
-        transition: 0.4s ease;
+        transition: width 0.4s ease, background 0.4s ease;
     }
-
-    #strength-text {
+    /* bullet points for password criteria */
+    .criteria-list {
+        list-style: none;
+        padding-left: 0;
+        text-align: left;
+        display: inline-block;
+        width: 80%;
+        font-size: 0.9rem;
+    }
+    .criteria-list li::before {
+        content: "•";
+        margin-right: 8px;
+        color: cyan;
         font-weight: bold;
-        margin: 5px 0;
     }
-
     button {
-        margin-top: 15px;
+        margin-top: 10px;
         padding: 10px 15px;
         border: none;
-        background: linear-gradient(45deg, cyan, lime);
+        background: cyan;
         color: #000;
         font-weight: bold;
         border-radius: 8px;
         cursor: pointer;
-        transition: 0.3s;
     }
-
     button:hover {
-        background: linear-gradient(45deg, #00ffffaa, #90ee90aa);
+        background: #00ffffaa;
     }
-
     #generated-password {
         margin-top: 10px;
         font-weight: bold;
         color: lightgreen;
-        word-break: break-word;
     }
 </style>
 </head>
 <body>
-<div class="container">
-    <h1>Password Strength Checker</h1>
-    <div class="input-group">
-        <input type="password" id="password" placeholder="Enter your password" />
-        <span class="toggle-password" id="toggle-password">👁️</span>
+
+<h1>Know About Password</h1>
+<div class="info-table">
+    <p>Think twice before choosing your password—if it’s not strong enough, don’t be shocked to discover a hacker feasting in your account the next time you log in. Use our password checker to make sure your account stays secure and off-limits to intruders.</p>
+</div>
+
+<div class="tips-table">
+    <h3>📌 Password Privacy Tips</h3>
+    <ul>
+        <li>Use at least 12+ characters for better security.</li>
+        <li>Mix uppercase, lowercase, numbers & symbols.</li>
+        <li>Never reuse passwords for important accounts.</li>
+        <li>Change passwords regularly to reduce risk.</li>
+        <li>Use a password manager to store them safely.</li>
+    </ul>
+</div>
+
+<h2>Password Strength Checker</h2>
+<div class="checker-table">
+    <div class="checker-container">
+        <div class="password-box">
+            <input type="password" id="password" placeholder="Enter your password" />
+            <span class="toggle-password" onclick="togglePassword()">👁</span>
+        </div>
+
+        <p id="strength-text">
+            <span id="strength-label"></span> 
+            <span id="score-text"></span>
+        </p>
+
+        <ul class="criteria-list" id="criteria-list">
+            <li id="length-check">At least 8 characters</li>
+            <li id="uppercase-check">Contains uppercase & lowercase</li>
+            <li id="number-check">Contains a number</li>
+            <li id="symbol-check">Contains a symbol</li>
+        </ul>
+
+        <div id="strength-bar"></div>
+
+        <p style="margin-top:10px;">• You can also get a strong password here:</p>
+        <button id="generate-btn">Generate Strong Password</button>
+        <p id="generated-password"></p>
     </div>
-    <div id="strength-bar"></div>
-    <p id="strength-text"></p>
-    <button id="generate-btn">Generate Strong Password</button>
-    <p id="generated-password"></p>
 </div>
 
 <script>
-    const passwordInput = document.getElementById("password");
-    const strengthBar = document.getElementById("strength-bar");
-    const strengthText = document.getElementById("strength-text");
-    const generateBtn = document.getElementById("generate-btn");
-    const generatedPassword = document.getElementById("generated-password");
-    const togglePassword = document.getElementById("toggle-password");
+const passwordInput = document.getElementById("password");
+const strengthBar = document.getElementById("strength-bar");
+const strengthLabel = document.getElementById("strength-label");
+const scoreText = document.getElementById("score-text");
+const generateBtn = document.getElementById("generate-btn");
+const generatedPassword = document.getElementById("generated-password");
 
-    passwordInput.addEventListener("input", updateStrength);
-    generateBtn.addEventListener("click", generatePassword);
-    togglePassword.addEventListener("click", togglePasswordVisibility);
+passwordInput.addEventListener("input", updateStrength);
+generateBtn.addEventListener("click", generatePassword);
 
-    function updateStrength() {
-        const password = passwordInput.value;
-        const strength = checkStrength(password);
+function updateStrength() {
+    const password = passwordInput.value;
+    const strength = checkStrength(password);
 
-        strengthBar.innerHTML = "";
-        const bar = document.createElement("div");
+    strengthBar.innerHTML = "";
+    const bar = document.createElement("div");
+    const colors = [
+        "linear-gradient(90deg, red, darkred)",
+        "linear-gradient(90deg, orangered, orange)",
+        "linear-gradient(90deg, gold, yellow)",
+        "linear-gradient(90deg, yellowgreen, green)",
+        "linear-gradient(90deg, limegreen, cyan)"
+    ];
+    const texts = [
+        "Very Weak ❌",
+        "Weak ⚠️",
+        "Moderate 🙂",
+        "Strong 💪",
+        "Very Strong 🔥"
+    ];
 
-        const colors = ["red", "orangered", "orange", "yellowgreen", "green"];
-        const texts = [
-            "Very Weak ❌",
-            "Weak ⚠️",
-            "Moderate 🙂",
-            "Strong 💪",
-            "Very Strong 🔥"
-        ];
+    bar.style.width = ((strength.score / 5) * 100) + "%";
+    bar.style.background = colors[strength.score - 1] || "transparent";
+    strengthLabel.textContent = texts[strength.score - 1] || "";
+    scoreText.textContent = `(${strength.score}/5)`;
 
-        bar.style.width = ((strength.score / 5) * 100) + "%";
-        bar.style.background = colors[strength.score - 1] || "transparent";
-        strengthText.textContent = texts[strength.score - 1] || "";
-        strengthText.style.color = colors[strength.score - 1] || "#fff";
+    strengthBar.appendChild(bar);
 
-        strengthBar.appendChild(bar);
+    // Update bullet colors
+    document.getElementById("length-check").style.color = password.length >= 8 ? "lime" : "#ccc";
+    document.getElementById("uppercase-check").style.color = (/[A-Z]/.test(password) && /[a-z]/.test(password)) ? "lime" : "#ccc";
+    document.getElementById("number-check").style.color = /\d/.test(password) ? "lime" : "#ccc";
+    document.getElementById("symbol-check").style.color = /[^A-Za-z0-9]/.test(password) ? "lime" : "#ccc";
+}
+
+function checkStrength(password) {
+    let score = 0;
+    if (password.length >= 8) score++;
+    if (/[A-Z]/.test(password) && /[a-z]/.test(password)) score++;
+    if (/\d/.test(password)) score++;
+    if (/[^A-Za-z0-9]/.test(password)) score++;
+    if (password.length >= 12) score++; // extra credit for long passwords
+    return { score };
+}
+
+function generatePassword() {
+    const length = 12;
+    const charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+";
+    let password = "";
+    for (let i = 0; i < length; i++) {
+        password += charset.charAt(Math.floor(Math.random() * charset.length));
     }
+    generatedPassword.textContent = password;
+    passwordInput.value = password;
+    updateStrength();
+}
 
-    function checkStrength(password) {
-        let score = 0;
-        if (password.length >= 8) score++;
-        if (password.length >= 12) score++;
-        if (/[A-Z]/.test(password) && /[a-z]/.test(password)) score++;
-        if (/\d/.test(password)) score++;
-        if (/[^A-Za-z0-9]/.test(password)) score++;
-        return { score };
-    }
-
-    function generatePassword() {
-        const length = 12;
-        const lower = "abcdefghijklmnopqrstuvwxyz";
-        const upper = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-        const numbers = "0123456789";
-        const special = "!@#$%^&*()_+";
-        const all = lower + upper + numbers + special;
-
-        let password = [
-            lower.charAt(Math.floor(Math.random() * lower.length)),
-            upper.charAt(Math.floor(Math.random() * upper.length)),
-            numbers.charAt(Math.floor(Math.random() * numbers.length)),
-            special.charAt(Math.floor(Math.random() * special.length))
-        ];
-
-        for (let i = password.length; i < length; i++) {
-            password.push(all.charAt(Math.floor(Math.random() * all.length)));
-        }
-
-        password = password.sort(() => Math.random() - 0.5).join("");
-
-        generatedPassword.textContent = password;
-        passwordInput.value = password;
-        updateStrength();
-    }
-
-    function togglePasswordVisibility() {
-        if (passwordInput.type === "password") {
-            passwordInput.type = "text";
-            togglePassword.textContent = "🙈";
-        } else {
-            passwordInput.type = "password";
-            togglePassword.textContent = "👁️";
-        }
-    }
+function togglePassword() {
+    passwordInput.type = passwordInput.type === "password" ? "text" : "password";
+}
 </script>
+
 </body>
 </html>
